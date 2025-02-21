@@ -1,0 +1,3 @@
+services:
+  node:
+    command: npm run dev

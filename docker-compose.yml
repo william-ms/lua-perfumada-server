@@ -1,0 +1,19 @@
+networks:
+  server:
+    driver: bridge
+
+services:
+  node:
+    build:
+      context: ./api
+      dockerfile: ../docker/node/Dockerfile
+    container_name: server_node
+    restart: unless-stopped
+    working_dir: /usr/src/app
+    networks:
+      - server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api/src:/usr/src/app/src
+    command: npm start
