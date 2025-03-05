@@ -1,19 +1,29 @@
 import "dotenv/config";
 import express from "express";
-import connection from "./database/connection.js";
-
+import cookieParser from "cookie-parser";
+import connectMongo from "./database/connectionMongo.js";
 import cors from "cors";
-
 import apiRoutes from "./routes/api.js";
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
-
-app.use(cors());
+app.use(
+	cors({
+		origin: process.env.CORS_ORIGIN.split(","),
+		credentials: true,
+	})
+);
 
 app.use("/api", apiRoutes);
 
-app.listen(process.env.PORT);
+try {
+	await connectMongo();
+	console.log("Connected to MongoDB successfully");
+} catch (error) {
+	console.error("Failed to connect to MongoDB:", error);
+	process.exit(1);
+}
 
-await connection();
+app.listen(process.env.PORT || 3000);

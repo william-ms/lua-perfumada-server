@@ -4,10 +4,10 @@ networks:
 
 services:
   node:
+    container_name: server_node
     build:
       context: ./api
       dockerfile: ../docker/node/Dockerfile
-    container_name: server_node
     restart: unless-stopped
     working_dir: /usr/src/app
     networks:
@@ -17,3 +17,18 @@ services:
     volumes:
       - ./api/src:/usr/src/app/src
     command: npm start
+
+  redis:
+    container_name: server_redis
+    build:
+      context: ./docker/redis
+      dockerfile: Dockerfile
+    networks:
+      - server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/usr/local/etc/redis/data
+
+volumes:
+  redis-data:
