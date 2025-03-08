@@ -30,5 +30,17 @@ services:
     volumes:
       - redis-data:/usr/local/etc/redis/data
 
+  nginx:
+    container_name: server_nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    networks:
+      - server
+    ports:
+      - "3443:443"
+    depends_on:
+      - node
+
 volumes:
   redis-data:
